@@ -1,0 +1,1 @@
+You can use more than one type of data structure in your solution. 
