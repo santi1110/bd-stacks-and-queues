@@ -31,7 +31,7 @@ public class AmazonJavaFileCompiler {
      */
     public boolean compile() {
         // TODO: uncomment to enable debug mode
-        // balancedCurlyBraceValidator.setDebug(true);
+         balancedCurlyBraceValidator.setDebug(true);
         return balancedCurlyBraceValidator.check(fileChars);
     }
 

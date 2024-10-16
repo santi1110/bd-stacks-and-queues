@@ -21,17 +21,54 @@ public class BalancedCurlyBraceValidator {
      */
     public boolean check(List<Character> fileCharacters) {
         Stack<Character> stack = new Stack<>();
+        int maxUnbalanced = 0;
+        int unbalancedCount = 0;
+        int longestBetweenBraces = 0;
+        int currentCountBetweenBraces = 0;
+        boolean insideBraces = false;
+        int remainingOpenBraces = 0;
+        int remainingCloseBraces = 0;
+
         for (char c : fileCharacters) {
-            if(c == '{') {
+            if (c == '{') {
                 stack.push(c);
+                unbalancedCount++;
+                insideBraces = true;
+                currentCountBetweenBraces = 0; // Reset the counter
+                if (unbalancedCount > maxUnbalanced) {
+                    maxUnbalanced = unbalancedCount;
+                }
             } else if (c == '}') {
                 try {
                     stack.pop();
-                } catch(EmptyStackException e) {
-                    return false;
+                    unbalancedCount--;
+                    if (insideBraces) {
+                        if (currentCountBetweenBraces > longestBetweenBraces) {
+                            longestBetweenBraces = currentCountBetweenBraces;
+                        }
+                        insideBraces = false;
+                    }
+                } catch (EmptyStackException e) {
+                    remainingCloseBraces++;
+                    return false;  // Unbalanced because there is no matching '{'
                 }
+            } else if (insideBraces) {
+                // Count the characters between braces
+                currentCountBetweenBraces++;
             }
         }
+
+        // If the stack is not empty, there are unbalanced opening braces left
+        remainingOpenBraces = stack.size();
+
+        if (debug) {
+            System.out.println("Maximum unbalanced braces encountered: " + maxUnbalanced);
+            System.out.println("Remaining unbalanced opening braces: " + remainingOpenBraces);
+            System.out.println("Remaining unbalanced closing braces: " + remainingCloseBraces);
+            System.out.println("Longest sequence between balanced braces: " + longestBetweenBraces);
+        }
+
+        // If the stack is empty, the braces are balanced
         return stack.isEmpty();
     }
 
